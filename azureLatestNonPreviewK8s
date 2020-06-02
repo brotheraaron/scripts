@@ -1,0 +1,1 @@
+az aks get-versions --location westus2 | jq -r '.orchestrators[] | select(.isPreview == true) | {orchestratorVersion} | .[] ' | sort -r | head -n1
