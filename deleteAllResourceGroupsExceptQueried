@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# For this example, I only have one resource group containing the word 'cloud' in my account.
+# This will delete every resource group in my account exept the one for the cloud shell:
+
+notRG=$(az group list --query "[?contains(name, 'cloud')].name" --output json | jq .[] -r)
+for RG in $(az group list --query "[?name!='$notRG'].name" --output json | jq .[] -r); do az group delete -n $RG -y; done
