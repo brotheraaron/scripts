@@ -1,0 +1,5 @@
+#!/bin/bash
+
+PODNAME=$@
+
+kubectl exec --stdin --tty $PODNAME -- /bin/bash
