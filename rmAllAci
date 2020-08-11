@@ -1,0 +1,1 @@
+for name in $(az container list -g myResourceGroup | jq -r '.[].id'); do az container delete --ids $name; done
