@@ -1,0 +1,1 @@
+for ACR_NAME in $(az acr list | jq -r '.[].name'); do az acr delete -n $ACR_NAME -y; done
