@@ -10,7 +10,9 @@ If your entire production environment gets wiped out after running one of these 
 Curl all the things:
 
 o permissions:
+
 curl http://cheat.sh/chmod/755
 
 o subnets:
+
 curl subnet.im/192.168.0.5/29
