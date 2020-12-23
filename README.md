@@ -14,4 +14,7 @@ curl http://cheat.sh/chmod/755
 
 o subnets:		
 curl subnet.im/192.168.0.5/29
+
+o my IP:
+curl checkip.amazonaws.com
 ```
