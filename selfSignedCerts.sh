@@ -1,3 +1,10 @@
+# Create unique directory :
+lbkeysdir="keys123"
+
+mkdir -p $HOME/$lbkeysdir
+# cp "$(readlink -f $0)" "$HOME/$lbkeysdir" 2>/dev/null
+cd $HOME/$lbkeysdir 2>/dev/null
+
 # Create the CA private key :
 openssl genrsa -out ca.key 2048 2>/dev/null
 
@@ -33,3 +40,26 @@ cat ca.crt
 printf "\n"
 echo "Private Key: "
 cat loadbalancer.key
+
+echo '' > $HOME/$lbkeysdir/printKeys.sh
+
+printKeys="ZWNobyAiU1NMIENlcnQ6ICIKY2F0IGxvYWRiYWxhbmNlci5jcnQKcHJpbnRmICJcbiIKZWNobyAi
+Q0EgQ2VydGlmaWNhdGU6ICIKY2F0IGNhLmNydApwcmludGYgIlxuIgplY2hvICJQcml2YXRlIEtl
+eTogIgpjYXQgbG9hZGJhbGFuY2VyLmtleQoKY2QgJGtleXNEaXI="
+
+echo $printKeys | base64 -di >> $HOME/$lbkeysdir/printKeys.sh
+chmod +x $HOME/$lbkeysdir/printKeys.sh
+
+echo '' > $HOME/$lbkeysdir/README
+
+README="WW91IG9ubHkgbmVlZCB0byBydW4gdGhlIHNjcmlwdCB0aGF0IGNyZWF0ZXMgdGhlIGNlcnRzIG9u
+ZSB0aW1lLgoKQWZ0ZXIgeW91IHJ1biB0aGUgc2NyaXB0IHRvIGNyZWF0ZSB0aGUgY2VydHMsIHlv
+dSBjYW4gcnVuIHRoZSBwcmludCBzY3JpcHQgYXMgbWFueSB0aW1lcyBhcyB5b3UgbmVlZCB0bwpv
+ciBqdXN0IGNhdCB0aGUga2V5cyBpbiB0aGUgZGlyZWN0b3J5IHRvIGNvcHkgYW5kIHBhc3RlIHRo
+ZSBrZXlzLgoK"
+
+echo $README | base64 -di >> README
+
+
+printf "\nCopy this script to $HOME/$lbkeysdir, that's where your selfsigned keys are saved.\n"
+
