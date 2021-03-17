@@ -1,0 +1,3 @@
+#! /bin/bash
+
+for i in $(ls -a ~/.ssh); do stat ~/.ssh/$i | grep -B1 -i socket | head -n1 | awk '{print $2}'; done
