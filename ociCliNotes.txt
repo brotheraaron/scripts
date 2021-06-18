@@ -1,0 +1,11 @@
+# Gets availability domain ocid
+oci iam availability-domain list | jq -r .data[].id
+
+# Get compartments in neat columns
+oci iam compartment list --include-root | jq -r '.data[] | "\(.name) \(.id)"' | column -t
+
+# Get root compartment ocid
+oci iam compartment list --include-root | jq -r .data[0].id
+
+# List all VCNs in a specific compartment id
+oci network vcn list -c $COMPARTMENT_ID | jq -r '.data[] | "\(."display-name") \(.id)"' | column -t
