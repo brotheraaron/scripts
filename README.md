@@ -17,4 +17,7 @@ curl subnet.im/192.168.0.5/29
 
 o my IP:
 curl checkip.amazonaws.com
+
+o cheat sheets
+curl cheat.sh/mount
 ```
