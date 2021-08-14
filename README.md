@@ -20,4 +20,7 @@ curl checkip.amazonaws.com
 
 o cheat sheets
 curl cheat.sh/mount
+
+o weather
+curl wttr.in/Seattle
 ```
