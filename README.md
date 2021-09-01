@@ -23,4 +23,6 @@ curl cheat.sh/mount
 
 o weather
 curl wttr.in/Seattle
+
+curl v2.wttr.in/Seattle
 ```
