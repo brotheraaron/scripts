@@ -9,6 +9,9 @@ If your entire production environment gets wiped out after running one of these 
 
 ```
 Curl all the things:
+o http codes:
+curl http://http.machine.codes/401
+
 o permissions:  
 curl http://cheat.sh/chmod/755
 
