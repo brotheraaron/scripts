@@ -9,5 +9,7 @@ This project takes a list of domains in the `domains.txt` file, checks the publi
 
 ## TODO:
 o Write all the domains to 1 file instead of individual ones.
+
 o Format the text better.
+
 o create a `--single` flag to pass only 1 domain for a quick lookup.
