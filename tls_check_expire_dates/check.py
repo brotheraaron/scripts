@@ -1,11 +1,16 @@
-import sys
-import argparse
+import os
+import csv
+import ssl
 import errno
 import socket
-import ssl
-from datetime import datetime
-from os.path import exists as file_exists
+import argparse
+import webbrowser
+import pandas as pd
 from typing import Any, Dict
+from datetime import datetime
+from colorama import Fore, Back, Style
+from os.path import exists as file_exists
+
 
 
 CONNECTION_TIMEOUT = 5.0
@@ -23,13 +28,26 @@ class LookupFailed(Exception):
     pass
 
 
-def print_f(original_stdout: str, file_name: str) -> Any:
+def print_f(original_stdout, file_name, idx) -> Any:
     time_stamp = int(datetime.now().timestamp())
+    header_list = ["Date Cert Expires", "Domain", "Days Till Cert Expires"]
+    HTMLBody = "<body bgcolor=black>"
 
-    with open(f"{file_name}", 'a') as f:
-        f.write(f"{original_stdout}\n")
-    
-    f.close
+    if not file_exists(file_name):
+        with open(file_name, 'a', newline='') as f:
+            header_list.insert(0,'Line:')
+            original_stdout.insert(0,idx)
+            f.write(HTMLBody)
+            file_writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            file_writer.writerow(header_list)
+            file_writer.writerow(original_stdout)
+
+    else:
+        with open(file_name, 'a+', newline='') as f:
+            original_stdout.insert(0,idx)
+            file_writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            file_writer.writerow(original_stdout)
+
 
 
 def get_ssl_expiry(domain: str) -> Any:
@@ -68,6 +86,12 @@ def get_ssl_expiry(domain: str) -> Any:
 
 
 def results():
+    default_expire_dates_csv = "expire_dates.csv"
+    default_html_file = "check_certs_results.html"
+
+    if file_exists(default_expire_dates_csv):
+        os.remove(default_expire_dates_csv) 
+
     # Initiate empty list
     domains = []
 
@@ -111,8 +135,12 @@ def results():
                 except Exception as e:
                     domains.append((domain, type(e).__name__))
 
+    headings = ["Date Cert Expires", "Domain", "Days Till Cert Expires"]
+    print("| {:^30} | {:^17} | {:^25} |".format(*headings))
 
+    i = 0
     for domain, date_str in sorted(domains, key=lambda x: x[1]):
+        i = i + 1
         # given date in the format "Mar 14 23:59:59 2023 GMT"
         # parse the given date using the datetime.strptime() method
         date = datetime.strptime(date_str, "%b %d %H:%M:%S %Y %Z")
@@ -133,14 +161,52 @@ def results():
         # format the number of days, and hours
         cert_expires_in_days_hours = f"{int(days)} days, and {int(hours)} hours"
 
-        # Formats stdout, simplifing how to see which certs are expiring soon.
-        # Format the information printed to stdout to simplify checking expired certs
-        send_to_std_out = f"\
-            \n| Expired date \t\t\t\t| Domain \t\t\t\t| Cert expires in \t\t|\
-            \n| {date_str} \t\t| {domain}\t\t| {cert_expires_in_days_hours}\t\t|"
+        headings = [date_str, domain, cert_expires_in_days_hours]
+        print("| {:^30} | {:^17} | {:^25} |".format(*headings))
+        
+        send_to_csv = [date_str, domain, cert_expires_in_days_hours]
+        print_f(send_to_csv, file_name=default_expire_dates_csv, idx=i)
+        df = pd.read_csv(default_expire_dates_csv)
 
-        print(send_to_std_out)
-        print_f(send_to_std_out, domain)
+        th_props = [
+            ('font-family', 'times new roman'),
+            ('font-size', '32'),
+            ('text-align', 'left'),
+            ('font-weight', 'bold'),
+            ('color', 'white'),
+            ("width", "350"),
+            ('background-color', "black")
+        ]
+
+        td_props = [
+            ('font-size', '24px'),
+            ("font-family" , 'Helvetica'),
+            # ("margin" , "200"),
+            # ("border-collapse" , "collapse"),
+            # ("border" , "1px solid #eee"),
+            # ("border-bottom" , "4px solid black"),
+            ("border-top" , "4px solid white"),
+            ('text-align', 'right'),
+            ('background-color', "black"),
+            ('color', 'white'),
+        ]
+
+
+        # Set table styles
+        styles = [
+            dict(selector="th", props=th_props),
+            dict(selector="td", props=td_props),
+        ]
+        
+
+        s=df.style.set_table_styles(styles).hide(axis="index").to_html(default_html_file)
+
+    
+    webbrowser.open('file://' + os.path.realpath(default_html_file))
+
+
+
+
 
 
 if __name__ == "__main__":
