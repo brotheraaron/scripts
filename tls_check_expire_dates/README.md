@@ -8,6 +8,4 @@ This project takes a list of domains in the `domains.txt` file, checks the publi
 | Jan 30 08:19:31 2023 GMT              | www.google.com                | 47 days, and 13 hours         |
 
 ## TODO:
-o Write all the domains to 1 file instead of individual ones. <br />
-o Format the text better. <br />
 o create a `--single` flag to pass only 1 domain for a quick lookup. 
